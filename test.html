@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login 2FA</title>
+    <link rel="stylesheet" href="loginstyles.css" />
+  </head>
+  <body>
+    <div class="cont">
+      <div class="pin_input">
+        <h2>Введите код подтверждения из Google Authenticator</h2>
+        <form id="pinForm">
+          <div class="pin-input-container">
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+            <input
+              type="text"
+              maxlength="1"
+              oninput="this.value=this.value.replace(/[^0-9]/g,'');"
+              class="pin-input"
+            />
+          </div>
+          <button type="button" class="submit">Подтвердить</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const pins = document.querySelectorAll(".pin-input");
+
+        pins.forEach((pin, index) => {
+          pin.addEventListener("keyup", function (event) {
+            const cursorPosition = pin.selectionStart;
+
+            if (!/^\d+$/.test(this.value)) {
+              this.value = "";
+            }
+
+            pin.setSelectionRange(cursorPosition, cursorPosition);
+
+            if (event.keyCode !== 8 && this.value.length === 1) {
+              if (index < pins.length - 1) {
+                pins[index + 1].focus();
+              }
+            } else if (event.keyCode === 8 && this.value.length === 0) {
+              if (index > 0) {
+                pins[index - 1].focus();
+              }
+            }
+          });
+        });
+
+        pins[0].focus();
+      });
+    </script>
+  </body>
+</html>

@@ -148,3 +148,10 @@ function printQR(qr_text) {
     colorLight: "#ffffff",
   });
 }
+
+function exitfromaccount() {
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
+  localStorage.removeItem("token_type");
+  document.location.replace("/login.html");
+}

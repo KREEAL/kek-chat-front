@@ -1,7 +1,3 @@
-function mockExit() {
-  alert("Вы вышли");
-}
-
 class message {
   constructor(sender, date, text) {
     this.sender = sender;

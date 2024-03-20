@@ -18,13 +18,17 @@ function getAllConversations() {
       data.forEach((element) => {
         if (element.user_1_id == user_id) {
           document.getElementById("peopleScroll").innerHTML +=
-            '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
+            '<div class="humantochatdiv"><button class="chatbutton" onclick="getConversationID(this)"><h3 class="humantochat">' +
             element.user_2_obj.username +
+            '</h3><h3 style="visibility:hidden">' +
+            element.user_2_obj.user_id +
             "</h3></button></div>";
         } else {
           document.getElementById("peopleScroll").innerHTML +=
-            '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
+            '<div class="humantochatdiv"><button class="chatbutton" onclick="getConversationID(this)" ><h3 class="humantochat">' +
             element.user_1_obj.username +
+            '</h3><h3 style="visibility:hidden">' +
+            element.user_1_obj.user_id +
             "</h3></button></div>";
         }
       });
@@ -43,8 +47,10 @@ function searchonchange(value) {
       } else {
         data.forEach((element) => {
           document.getElementById("peopleScroll").innerHTML +=
-            '<div class="humantochatdiv" style = "background:#f0f0f0"><button class="chatbutton"><h3 class="humantochat">' +
+            '<div class="humantochatdiv" style = "background:#f0f0f0"><button class="chatbutton" onclick="getConversationID(this)"><h3 class="humantochat">' +
             element.username +
+            '</h3><h3 style="visibility:hidden">' +
+            element.user_id +
             "</h3></button></div>";
         });
       }
@@ -52,6 +58,11 @@ function searchonchange(value) {
   } else {
     getAllConversations();
   }
+}
+
+function getConversationID(callingObject) {
+  console.log(callingObject.children[1].innerHTML);
+  return callingObject.children[1].innerHTML;
 }
 
 window.onload = () => {

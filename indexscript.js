@@ -11,19 +11,24 @@ function getCurrentUser() {
 
 function getAllConversations() {
   getData("api/v1/conversations").then((data) => {
-    data.forEach((element) => {
-      if (element.user_1_id == user_id) {
-        document.getElementById("peopleScroll").innerHTML +=
-          '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
-          element.user_2_obj.username +
-          "</h3></button></div>";
-      } else {
-        document.getElementById("peopleScroll").innerHTML +=
-          '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
-          element.user_1_obj.username +
-          "</h3></button></div>";
-      }
-    });
+    if (data.length == 0) {
+      document.getElementById("peopleScroll").innerHTML +=
+        '<h3 class="humantochat">Нет чатов</h3>';
+    } else {
+      data.forEach((element) => {
+        if (element.user_1_id == user_id) {
+          document.getElementById("peopleScroll").innerHTML +=
+            '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
+            element.user_2_obj.username +
+            "</h3></button></div>";
+        } else {
+          document.getElementById("peopleScroll").innerHTML +=
+            '<div class="humantochatdiv"><button class="chatbutton"><h3 class="humantochat">' +
+            element.user_1_obj.username +
+            "</h3></button></div>";
+        }
+      });
+    }
   });
 }
 
@@ -32,12 +37,17 @@ function searchonchange(value) {
 
   if (value != "") {
     getData("/api/v1/users/search?username=" + value).then((data) => {
-      data.forEach((element) => {
+      if (data.length == 0) {
         document.getElementById("peopleScroll").innerHTML +=
-          '<div class="humantochatdiv" style = "background:#f0f0f0"><button class="chatbutton"><h3 class="humantochat">' +
-          element.username +
-          "</h3></button></div>";
-      });
+          '<h3 class="humantochat">Нет юзеров</h3>';
+      } else {
+        data.forEach((element) => {
+          document.getElementById("peopleScroll").innerHTML +=
+            '<div class="humantochatdiv" style = "background:#f0f0f0"><button class="chatbutton"><h3 class="humantochat">' +
+            element.username +
+            "</h3></button></div>";
+        });
+      }
     });
   } else {
     getAllConversations();

@@ -3,15 +3,12 @@ function register() {
   let password = document.getElementById("registerpassword").value;
   let body = { username: login, password: password };
   postData("api/v1/auth/register", body).then((data) => {
-    console.log(data);
     if (data.detail == null) {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("token_type", "app_token");
 
       setTimeout(() => {
-        console.log("ЖДУ QR");
-
         // Жизнь полна неожиданностей... Но эта пауза точно не будет лишней
         document.getElementById("2fa_container").style.visibility = "visible";
         document.getElementById("signcontainer").remove();
@@ -26,15 +23,12 @@ function login() {
   let password = document.getElementById("loginpassword").value;
   let body = { username: login, password: password };
   postData("api/v1/auth/login", body).then((data) => {
-    console.log(data);
-
     if (data.detail == null) {
       localStorage.setItem("access_token", data.access_token);
       localStorage.setItem("refresh_token", data.refresh_token);
       localStorage.setItem("token_type", "pre_2fa_token");
 
       setTimeout(() => {
-        console.log("ЖДУ ВВОД цифар");
         document.getElementById("qrcode").remove();
         document.getElementById("2fa_container").style.height = "300px";
         document.getElementById("2fa_container").style.visibility = "visible";
@@ -61,25 +55,19 @@ function checkTestTOTP() {
   totpres += document.getElementById("totp5").value;
   totpres += document.getElementById("totp6").value;
 
-  console.log("testtotp");
-  console.log(localStorage.getItem("token_type"));
-
   if (localStorage.getItem("token_type") == "pre_2fa_token") {
     postData("api/v1/auth/login_totp", { code: totpres }).then(
       (data, response) => {
-        console.log(data);
         if (data.detail == null) {
           localStorage.setItem("access_token", data.access_token);
           localStorage.setItem("refresh_token", data.refresh_token);
           localStorage.setItem("token_type", "app_token");
           document.location.replace("/index.html");
-          console.log("Я ТУТ НОВЕНЬКИЙ");
         }
       }
     );
   } else if (localStorage.getItem("token_type") == "app_token") {
     postData("/api/v1/auth/test_totp", { code: totpres }).then((data) => {
-      console.log(data);
       if (data.success) {
         document.location.replace("/index.html");
       }

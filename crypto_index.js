@@ -110,7 +110,7 @@ async function encryptMyMessage(msg_text, user_id_chat) {
     ["encrypt"]
   );
 
-  let enc = new TextEncoder();
+  let enc = new TextEncoder('utf-8');
   let encoded = enc.encode(msg_text);
 
   enc_text = await window.crypto.subtle.encrypt(
@@ -128,6 +128,7 @@ async function decryptAlienMessage(encrypted_msg_text, user_id_chat) {
   const pemContents = localStorage.getItem(
     user_id + "_" + user_id_chat + "_private"
   );
+  let dec = new TextDecoder('utf-8');
   // base64 decode the string to get the binary data
   const binaryDerString = window.atob(pemContents);
   // convert from a binary string to an ArrayBuffer
@@ -148,7 +149,7 @@ async function decryptAlienMessage(encrypted_msg_text, user_id_chat) {
     my_private_key,
     str2ab(window.atob(encrypted_msg_text))
   );
-  return ab2str(decrypted_txt);
+  return (dec.decode(decrypted_txt));
 }
 
 function str2ab(str) {

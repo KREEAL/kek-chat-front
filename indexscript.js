@@ -213,39 +213,93 @@ async function sendMessage() {
   encrypted_message = await encryptMyMessage(text, current_user_chat_id);
   postData("api/v1/conversations/" + current_conversation_id + "/sendmsg", {
     encrypted_text: encrypted_message,
+  }).then((res) => {
+    document.getElementById("inputmessage").value = "";
+    let my_messages = localStorage.getItem(
+      user_id + "_" + current_user_chat_id + "_my_messages"
+    );
+    if (my_messages == null) {
+      my_messages = [];
+    } else {
+      my_messages = JSON.parse(my_messages);
+    }
+    my_messages.push(res);
+    localStorage.setItem(
+      user_id + "_" + current_user_chat_id + "_my_messages",
+      JSON.stringify(my_messages)
+    );
   });
-  document.getElementById("inputmessage").value = "";
 }
 
 function getLastMessagesInChat() {
   getData("api/v1/conversations/" + current_conversation_id + "/messages").then(
     (data) => {
-      data.forEach(async (element) => {
-        date = new Date(Date.parse(element.send_datetime));
-        current_chat_messages.push(element.message_id);
+      let my_messages = localStorage.getItem(
+        user_id + "_" + current_user_chat_id + "_my_messages"
+      );
+      if (my_messages != null) {
+        my_messages = JSON.parse(my_messages);
+      } else {
+        my_messages = [];
+      }
+      data
+        .slice()
+        .reverse()
+        .forEach(async (element) => {
+          if (element.sender_user_id == user_id) {
+            let msg_obj = null;
+            my_messages.forEach((my_msg) => {
+              if (my_msg.message_id == element.message_id) {
+                //если май месседж айди равно элемент месседж айди
+              }
+            });
+          } else {
+            const date = new Date(Date.parse(element.send_datetime));
+            console.log(date);
+            current_chat_messages.push(element.message_id);
+            text = await decryptAlienMessage(
+              element.encrypted_text,
+              current_user_chat_id
+            );
+            fromFriend = true;
 
-        text = await decryptAlienMessage(
-          element.encrypted_text,
-          current_user_chat_id
-        );
-        fromFriend = null;
-        if (element.sender_id == current_user_chat_id) {
-          fromFriend = true;
-        } else {
-          fromFriend = false;
-        }
-        addMessageToScroll(
-          "·" +
-            date.getDate() +
-            date.getMonth() +
-            "," +
-            date.getHours() +
-            ":" +
-            date.getMinutes(),
-          text,
-          fromFriend
-        );
-      });
+            let elem = document.getElementById("messagesscroll");
+            const date_msg =
+              date.getDate() +
+              "." +
+              (date.getMonth() + 1) +
+              "," +
+              date.getHours() +
+              ":" +
+              date.getMinutes();
+            if (fromFriend == false) {
+              elem.innerHTML +=
+                '<div class="minemessage"><h4>' +
+                date_msg +
+                "</h4><h3>" +
+                text +
+                "</h3></div>";
+            } else {
+              document.getElementById("messagesscroll").innerHTML +=
+                '<div class="friendmessage"><h4>' +
+                date_msg +
+                "</h4><h3>" +
+                text +
+                "</h3></div>";
+            }
+
+            /*const datestr =
+              date.getDate() +
+              "." +
+              (date.getMonth() + 1) +
+              "," +
+              date.getHours() +
+              ":" +
+              date.getMinutes() +
+              element.message_id;
+            addMessageToScroll(datestr, text, fromFriend);*/
+          }
+        });
     }
   );
 }

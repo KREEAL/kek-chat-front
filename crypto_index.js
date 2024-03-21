@@ -132,29 +132,23 @@ async function decryptAlienMessage(encrypted_msg_text, user_id_chat) {
   const binaryDerString = window.atob(pemContents);
   // convert from a binary string to an ArrayBuffer
   const binaryDer = str2ab(binaryDerString);
-  try {
-    const my_private_key = await window.crypto.subtle.importKey(
-      "pkcs8",
-      binaryDer,
-      {
-        name: "RSA-OAEP",
-        hash: "SHA-256",
-      },
-      true,
-      ["decrypt"]
-    );
-    console.log("555");
+  const my_private_key = await window.crypto.subtle.importKey(
+    "pkcs8",
+    binaryDer,
+    {
+      name: "RSA-OAEP",
+      hash: "SHA-256",
+    },
+    true,
+    ["decrypt"]
+  );
 
-    decrypted_txt = await window.crypto.subtle.decrypt(
-      { name: "RSA-OAEP" },
-      my_private_key,
-      str2ab(window.atob(encrypted_msg_text))
-    );
-    return decrypted_txt;
-  } catch (e) {
-    console.log("123");
-    console.log(e);
-  }
+  decrypted_txt = await window.crypto.subtle.decrypt(
+    { name: "RSA-OAEP" },
+    my_private_key,
+    str2ab(window.atob(encrypted_msg_text))
+  );
+  return ab2str(decrypted_txt);
 }
 
 function str2ab(str) {

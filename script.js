@@ -15,33 +15,33 @@ for (let i = 0; i < 10; i++) {
   messages.push(msg);
 }
 
-function addMessageToScroll(date, message, fromFriend) {
+function addMessageToScroll(date_msg, message, fromFriend) {
   let elem = document.getElementById("messagesscroll");
   if (fromFriend == false) {
     elem.innerHTML +=
       '<div class="minemessage"><h4>' +
-      date +
+      date_msg +
       "</h4><h3>" +
       message +
       "</h3></div>";
     //прокрутка скролбара
-    elem.scrollIntoView({
-      behavior: "smooth",
-      block: "end",
-      inline: "nearest",
-    });
+    //elem.scrollIntoView({
+    //  behavior: "smooth",
+    //  block: "end",
+    //  inline: "nearest",
+    //});
   } else {
     document.getElementById("messagesscroll").innerHTML +=
       '<div class="friendmessage"><h4>' +
-      date +
+      date_msg +
       "</h4><h3>" +
       message +
       "</h3></div>";
     //прокрутка скролбара
-    elem.scrollTop = elem.scrollHeight;
-    scroll.animate({
-      scrollLeft: scroll.get()[0].scrollWidth,
-    });
+    //elem.scrollTop = elem.scrollHeight;
+    //scroll.animate({
+    //  scrollLeft: scroll.get()[0].scrollWidth,
+    //});
   }
 }
 

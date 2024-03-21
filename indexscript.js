@@ -223,7 +223,13 @@ async function sendMessage() {
     } else {
       my_messages = JSON.parse(my_messages);
     }
-    my_messages.push(res);
+    my_messages.push({
+      message_id: res.message_id,
+      conversation_id: res.conversation_id,
+      sender_user_id: res.sender_user_id,
+      send_datetime: res.send_datetime,
+      plain_text: text,
+    });
     localStorage.setItem(
       user_id + "_" + current_user_chat_id + "_my_messages",
       JSON.stringify(my_messages)
@@ -247,10 +253,38 @@ function getLastMessagesInChat() {
         .reverse()
         .forEach(async (element) => {
           if (element.sender_user_id == user_id) {
-            let msg_obj = null;
             my_messages.forEach((my_msg) => {
               if (my_msg.message_id == element.message_id) {
                 //если май месседж айди равно элемент месседж айди
+                const date = new Date(Date.parse(my_msg.send_datetime));
+                current_chat_messages.push(my_msg.message_id);
+                text = my_msg.plain_text;
+                fromFriend = false;
+
+                let elem = document.getElementById("messagesscroll");
+                const date_msg =
+                  date.getDate() +
+                  "." +
+                  (date.getMonth() + 1) +
+                  "," +
+                  date.getHours() +
+                  ":" +
+                  date.getMinutes();
+                if (fromFriend == false) {
+                  elem.innerHTML +=
+                    '<div class="minemessage"><h4>' +
+                    date_msg +
+                    "</h4><h3>" +
+                    text +
+                    "</h3></div>";
+                } else {
+                  document.getElementById("messagesscroll").innerHTML +=
+                    '<div class="friendmessage"><h4>' +
+                    date_msg +
+                    "</h4><h3>" +
+                    text +
+                    "</h3></div>";
+                }
               }
             });
           } else {
